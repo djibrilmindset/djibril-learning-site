@@ -10,7 +10,7 @@
 <meta property="og:url" content="https://djibrilmindset.github.io/djibril-learning-site/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<title>Djibril Learning — Le mécanisme de ton stagnation</title>
+<title>Djibril Learning — T'es pas en retard. T'es programmé pour stagner.</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -328,16 +328,92 @@
     .temoignage-modal { padding: 8px; }
     .temoignage-modal-inner { padding: 52px 10px 16px; max-width: 100%; }
   }
-  /* Cartes témoignages — rendre les miniatures visibles */
-  .testimonial-card { background-size: cover !important; background-position: center !important; }
+  /* === CARTES TÉMOIGNAGES — DESIGN v2 (sophistiqué) === */
+  .testimonial-card {
+    background-size: cover !important;
+    background-position: center !important;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: transform 0.4s cubic-bezier(.2,.8,.2,1), box-shadow 0.4s ease, border-color 0.3s;
+    will-change: transform;
+  }
+  /* Gradient overlay double — top léger pour le badge, bottom plus marqué pour le nom */
   .testimonial-card::before {
     content: ''; position: absolute; inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 100%);
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 55%, rgba(10,4,16,0.85) 100%);
     pointer-events: none;
+    transition: opacity 0.3s;
   }
-  .testimonial-card .badge, .testimonial-card .play, .testimonial-card .name { z-index: 2; }
-  .testimonial-card .name { color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.8); }
-  .testimonial-card .play { background: rgba(255,46,147,0.85); border-color: rgba(255,255,255,0.4); box-shadow: 0 4px 14px rgba(255,46,147,0.4); }
+  .testimonial-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,46,147,0) 0%, rgba(255,46,147,0) 70%, rgba(255,46,147,0.18) 100%);
+    pointer-events: none; opacity: 0; transition: opacity 0.4s;
+  }
+  .testimonial-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    border-color: rgba(255,46,147,0.5);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45), 0 0 25px rgba(255,46,147,0.25);
+  }
+  .testimonial-card:hover::after { opacity: 1; }
+  .testimonial-card:hover .play {
+    transform: scale(1.12);
+    box-shadow: 0 6px 22px rgba(255,46,147,0.6), 0 0 0 4px rgba(255,46,147,0.18);
+  }
+
+  /* Badge top-left (numéro / total) — pill monospace data-feel */
+  .testimonial-card .badge {
+    position: absolute; top: 10px; left: 10px;
+    padding: 4px 10px; border-radius: 999px;
+    background: rgba(10,4,16,0.7); backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.12);
+    font-family: 'SF Mono', ui-monospace, Menlo, monospace;
+    font-size: 9.5px; font-weight: 600; letter-spacing: 0.04em;
+    color: rgba(255,255,255,0.92);
+    z-index: 3;
+  }
+
+  /* Star badge top-right (apparaît au hover) */
+  .testimonial-card .stars {
+    position: absolute; top: 10px; right: 10px;
+    padding: 3px 8px; border-radius: 999px;
+    background: linear-gradient(90deg, rgba(255,122,61,0.85), rgba(255,46,147,0.85));
+    font-size: 8.5px; letter-spacing: 0.5px; font-weight: 700;
+    color: #fff; z-index: 3;
+    opacity: 0; transform: translateY(-4px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .testimonial-card:hover .stars { opacity: 1; transform: translateY(0); }
+
+  /* Play button — glassmorphism + ring animation */
+  .testimonial-card .play {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: rgba(255,255,255,0.12); backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255,255,255,0.45);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    transition: transform 0.35s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s;
+    z-index: 3;
+  }
+  .testimonial-card .play::after {
+    content: ''; width: 0; height: 0;
+    border-left: 13px solid #fff;
+    border-top: 8px solid transparent; border-bottom: 8px solid transparent;
+    margin-left: 4px; filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+  }
+
+  /* Name overlay bottom — clean serif italic + backdrop */
+  .testimonial-card .name {
+    position: absolute; bottom: 10px; left: 10px; right: 10px;
+    font-family: var(--font-serif); font-style: italic;
+    font-size: 12px; font-weight: 600;
+    color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+    text-align: left; letter-spacing: 0.01em;
+    z-index: 3;
+  }
+  .testimonial-card .name .dot {
+    display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+    background: var(--cyan); margin-right: 6px; vertical-align: middle;
+    box-shadow: 0 0 6px rgba(126,243,255,0.8);
+  }
 
   /* MOTS-CLES SOPHISTIQUES */
   .kw-mental {
@@ -442,9 +518,9 @@
 <!-- S1 HERO TITRE (titre TOUT EN HAUT) -->
 <section class="hero" style="padding-top:40px;">
   <div class="container">
-    <div class="pastille">À L'ATTENTION DE CEUX QUI VEULENT SE SUFFIRE À EUX-MÊMES</div>
-    <h1>Imagine que t'as <span class="kw-action">jamais vu</span> <span class="kw-mental">LE mécanisme</span> qui résout <span class="kw-power">tous tes problèmes</span> d'un coup.</h1>
-    <p class="hero-sub"><span class="kw-mental">97% de chances</span> que tu me <span class="kw-power">remercies</span> dans 5 minutes.</p>
+    <div class="pastille">POUR CEUX QUI VEULENT SE SUFFIRE À EUX-MÊMES</div>
+    <h1>T'es pas <span class="kw-action">en retard</span>.<br>T'es <span class="kw-mental">programmé</span> pour <span class="kw-power">stagner</span>.</h1>
+    <p class="hero-sub"><span class="kw-mental">5 minutes</span> pour comprendre. <span class="kw-power">83 mecs</span> avant toi l'ont vu — <span class="kw-action">tu seras le 84e</span>.</p>
   </div>
 </section>
 
@@ -619,9 +695,11 @@
   const grid = document.getElementById('testimonialsGrid');
   grid.innerHTML = TEMOIGNAGES_WISTIA.map((t, i) => `
     <div class="testimonial-card" data-index="${i}" style="background-image:url('${t.thumb}');">
-      <div class="badge">${String(i+1).padStart(2,'0')} / ${TEMOIGNAGES_WISTIA.length}</div>
+      <div class="badge">${String(i+1).padStart(2,'0')} / ${String(TEMOIGNAGES_WISTIA.length).padStart(2,'0')}</div>
+      <div class="stars">★★★★★</div>
       <div class="play"></div>
-      </div>
+      <div class="name"><span class="dot"></span>${t.nom}</div>
+    </div>
   `).join('');
 
   // Modal témoignages — lecteur Wistia inline
