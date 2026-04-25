@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="description" content="Comprends le mécanisme qui te bloque. +80 personnes l'ont fait avant toi.">
-<meta property="og:title" content="T'es pas en retard — T'es programmé pour stagner">
+<meta property="og:title" content="Imagine que t'as jamais vu LE mécanisme qui résout tous tes problèmes d'un coup">
 <meta property="og:description" content="Comprends le mécanisme qui te bloque. +80 personnes l'ont fait avant toi.">
 <meta property="og:image" content="https://djibrilmindset.github.io/djibril-learning-site/og-image.png">
 <meta property="og:url" content="https://djibrilmindset.github.io/djibril-learning-site/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<title>Djibril Learning — T'es pas en retard. T'es programmé pour stagner.</title>
+<title>Djibril Learning — Imagine que t'as jamais vu LE mécanisme qui résout tous tes problèmes d'un coup.</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -331,11 +331,12 @@
   /* === CARTES TÉMOIGNAGES — DESIGN v2 (sophistiqué) === */
   .testimonial-card {
     background-size: cover !important;
-    background-position: center !important;
+    background-position: center 22% !important;
     border: 1px solid rgba(255,255,255,0.08);
-    transition: transform 0.4s cubic-bezier(.2,.8,.2,1), box-shadow 0.4s ease, border-color 0.3s;
-    will-change: transform;
+    transition: transform 0.55s cubic-bezier(.2,.8,.2,1), box-shadow 0.55s ease, border-color 0.3s, background-position 6s ease;
+    will-change: transform, background-position;
   }
+  .testimonial-card:hover { background-position: center 30% !important; }
   /* Gradient overlay double — top léger pour le badge, bottom plus marqué pour le nom */
   .testimonial-card::before {
     content: ''; position: absolute; inset: 0;
@@ -497,6 +498,46 @@
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  /* === REVEAL on scroll (IntersectionObserver) === */
+  .reveal { opacity: 0; transform: translateY(28px) scale(0.985); transition: opacity 0.9s cubic-bezier(.22,.61,.36,1), transform 0.9s cubic-bezier(.22,.61,.36,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0) scale(1); }
+  .reveal-stagger > * { opacity: 0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; transition-delay: calc(var(--i, 0) * 60ms); }
+  .reveal-stagger.visible > * { opacity: 1; transform: translateY(0); }
+
+  /* === GRADIENT MESH BACKGROUND - subtle animated === */
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(255,46,147,0.10) 0%, transparent 36%),
+      radial-gradient(circle at 82% 8%, rgba(126,243,255,0.08) 0%, transparent 38%),
+      radial-gradient(circle at 50% 95%, rgba(255,122,61,0.07) 0%, transparent 42%);
+    animation: meshDrift 24s ease-in-out infinite alternate;
+  }
+  @keyframes meshDrift {
+    0%   { transform: translate3d(0,0,0) scale(1); }
+    100% { transform: translate3d(2%, -1.5%, 0) scale(1.06); }
+  }
+
+  /* === HERO H1 SHEEN === */
+  .hero h1 { position: relative; }
+  .hero h1::after {
+    content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 35%, rgba(255,255,255,0.18) 50%, transparent 65%);
+    background-size: 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; pointer-events: none;
+    animation: sheen 4.6s ease-in-out 0.6s infinite;
+  }
+  @keyframes sheen {
+    0% { background-position: 200% 0; }
+    60%, 100% { background-position: -50% 0; }
+  }
+
+  /* === PARALLAX TÉMOIGNAGES === */
+  .testimonials-grid.parallax-on .testimonial-card { transition: transform 0.4s cubic-bezier(.2,.8,.2,1), box-shadow 0.4s ease, border-color 0.3s, background-position 6s ease; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal, .reveal-stagger > * { opacity: 1 !important; transform: none !important; transition: none !important; }
+    body::before, .hero h1::after { animation: none !important; }
+  }
 </style>
 </head>
 <body>
@@ -519,8 +560,8 @@
 <section class="hero" style="padding-top:40px;">
   <div class="container">
     <div class="pastille">POUR CEUX QUI VEULENT SE SUFFIRE À EUX-MÊMES</div>
-    <h1>T'es pas <span class="kw-action">en retard</span>.<br>T'es <span class="kw-mental">programmé</span> pour <span class="kw-power">stagner</span>.</h1>
-    <p class="hero-sub"><span class="kw-mental">5 minutes</span> pour comprendre. <span class="kw-power">83 mecs</span> avant toi l'ont vu — <span class="kw-action">tu seras le 84e</span>.</p>
+    <h1>Imagine que t'as <span class="kw-action">jamais vu</span> <span class="kw-mental">LE mécanisme</span> qui résout <span class="kw-power">tous tes problèmes</span> d'un coup.</h1>
+    <p class="hero-sub"><span class="kw-power">97 %</span> de chances que tu me remercies dans <span class="kw-mental">5 minutes</span>. <span class="kw-action">83 mecs</span> avant toi l'ont vu — <span class="kw-action">tu seras le 84<sup>e</sup></span>.</p>
   </div>
 </section>
 
@@ -607,6 +648,7 @@
 
   // 83 Témoignages vidéo Wistia (récupérés via Wistia API, 83 = 69 numérotés + 14 anonymes)
   const TEMOIGNAGES_WISTIA = [
+    {label:'A13',nom:'Hakim B.',id:'pqpqzpr3qq',thumb:'https://embed-ssl.wistia.com/deliveries/0224ee1ca34d0e3a13b2ad1e2a5a06a4688154f4.jpg?image_crop_resized=400x712'},
     {label:'A14',nom:'Nasser O.',id:'lcgvstjd7s',thumb:'https://embed-ssl.wistia.com/deliveries/cc6e09b4e0cb4700e4eba26ae2aa7c80d5e7a5a1.jpg?image_crop_resized=400x712'},
     {label:'1',nom:'Ali K.',id:'0y16q2oude',thumb:'https://embed-ssl.wistia.com/deliveries/1cda3aee60db174d2e6d40a0dd0d5bdc98e2d5bf.jpg?image_crop_resized=400x712'},
     {label:'2',nom:'Karim H.',id:'7m1ikq14mn',thumb:'https://embed-ssl.wistia.com/deliveries/8704d469c5ab86f3123aee616250005dd0bef15f.jpg?image_crop_resized=400x712'},
@@ -689,16 +731,14 @@
     {label:'A10',nom:'Amadou S.',id:'y4do3loz6e',thumb:'https://embed-ssl.wistia.com/deliveries/da6584e5c0d2b7044a5c4dffe8b7fb4d27389909.jpg?image_crop_resized=400x712'},
     {label:'A11',nom:'Cheikh N.',id:'w0628fupnp',thumb:'https://embed-ssl.wistia.com/deliveries/b80a1904441dad0b074ec1088a63e934456ab6b0.jpg?image_crop_resized=400x712'},
     {label:'A12',nom:'Tariq F.',id:'ki491gr1sm',thumb:'https://embed-ssl.wistia.com/deliveries/66c5573fb44a51cc3f3abec44e21d24b7349df7d.jpg?image_crop_resized=400x712'},
-    {label:'A13',nom:'Hakim B.',id:'pqpqzpr3qq',thumb:'https://embed-ssl.wistia.com/deliveries/0224ee1ca34d0e3a13b2ad1e2a5a06a4688154f4.jpg?image_crop_resized=400x712'},
   ];
 
   const grid = document.getElementById('testimonialsGrid');
   grid.innerHTML = TEMOIGNAGES_WISTIA.map((t, i) => `
-    <div class="testimonial-card" data-index="${i}" style="background-image:url('${t.thumb}');">
+    <div class="testimonial-card reveal" data-index="${i}" style="background-image:url('${t.thumb}');">
       <div class="badge">${String(i+1).padStart(2,'0')} / ${String(TEMOIGNAGES_WISTIA.length).padStart(2,'0')}</div>
       <div class="stars">★★★★★</div>
       <div class="play"></div>
-      <div class="name"><span class="dot"></span>${t.nom}</div>
     </div>
   `).join('');
 
@@ -771,6 +811,49 @@
       if (overlay) overlay.style.display = 'none';
     });
   }
+
+  /* ====== SCROLL REVEAL via IntersectionObserver ====== */
+  (function setupReveals() {
+    // Auto-tag: hero, sub-heros, sections, h2, footer CTA
+    const autoSelectors = ['.hero h1', '.hero-sub', 'section h2', 'section p.sub-italic', '.cta-final', '.numbers-block', '.testimonials-grid > .testimonial-card'];
+    autoSelectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach((el, i) => {
+        if (!el.classList.contains('reveal')) el.classList.add('reveal');
+        el.style.transitionDelay = (Math.min(i * 35, 350)) + 'ms';
+      });
+    });
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+  })();
+
+  /* ====== PARALLAX TÉMOIGNAGES léger (background-position vs scroll) ====== */
+  (function setupParallax() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const grid = document.querySelector('.testimonials-grid');
+    if (!grid) return;
+    grid.classList.add('parallax-on');
+    const cards = grid.querySelectorAll('.testimonial-card');
+    let ticking = false;
+    function update() {
+      const vh = window.innerHeight;
+      cards.forEach(c => {
+        const r = c.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh) return;
+        const ratio = (r.top + r.height/2 - vh/2) / vh; // -0.5..0.5
+        const offset = 22 + ratio * 14; // 8..36 area
+        c.style.backgroundPosition = `center ${offset}%`;
+      });
+      ticking = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    update();
+  })();
 </script>
 
 </body>
