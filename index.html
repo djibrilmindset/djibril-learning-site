@@ -578,14 +578,26 @@
     box-shadow:0 12px 40px rgba(255,46,147,0.25);
   }
 
-  /* Smooth fade reveal sections */
-  section, .container > div { animation:fadeRise 1s ease-out backwards; }
-  section:nth-child(2) { animation-delay:0.1s; }
-  section:nth-child(3) { animation-delay:0.2s; }
-  section:nth-child(4) { animation-delay:0.3s; }
-  @keyframes fadeRise {
-    from { opacity:0; transform:translateY(30px); filter:blur(8px); }
-    to { opacity:1; transform:translateY(0); filter:blur(0); }
+  /* Smooth fade reveal sections - desktop ONLY */
+  @media (min-width: 769px) and (hover:hover) {
+    section, .container > div { animation:fadeRise 1s ease-out backwards; }
+    section:nth-child(2) { animation-delay:0.1s; }
+    section:nth-child(3) { animation-delay:0.2s; }
+    section:nth-child(4) { animation-delay:0.3s; }
+    @keyframes fadeRise {
+      from { opacity:0; transform:translateY(30px); filter:blur(8px); }
+      to { opacity:1; transform:translateY(0); filter:blur(0); }
+    }
+  }
+  /* MOBILE: tout visible, animations off */
+  @media (max-width: 768px), (pointer:coarse) {
+    section, .container > div, .card, .testimonial-card, .grid-3 > *, .grid-2 > * {
+      opacity:1 !important; transform:none !important; filter:none !important; animation:none !important;
+    }
+    body::before { animation:none !important; opacity:0.2 !important; }
+    body::after { opacity:0.02 !important; }
+    .cursor-glow { display:none !important; }
+    .hero h1 { animation:none !important; -webkit-text-fill-color:var(--text-primary, #fff) !important; background:none !important; color:var(--text-primary, #fff) !important; }
   }
 
   /* H1 shimmer on first load */
@@ -940,35 +952,41 @@
 <script src="https://unpkg.com/lenis@1.0.42/dist/lenis.min.js"></script>
 <script>
 (function(){
-  // 1. Smooth scroll Lenis
-  if (typeof Lenis !== 'undefined') {
+  // Mobile detection
+  const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window) || window.matchMedia('(pointer:coarse)').matches;
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 1. Smooth scroll Lenis - desktop ONLY (mobile = scroll natif touch)
+  if (typeof Lenis !== 'undefined' && !isMobile && !reduceMotion) {
     const lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
   }
 
-  // 2. Custom cursor glow
+  // 2. Custom cursor glow - desktop hover only
   const cg = document.getElementById('cursorGlow');
-  if (cg && window.matchMedia('(hover:hover)').matches) {
+  if (cg && window.matchMedia('(hover:hover)').matches && !isMobile) {
     document.addEventListener('mousemove', e => {
       cg.style.left = e.clientX + 'px';
       cg.style.top = e.clientY + 'px';
     });
+  } else if (cg) { cg.style.display = 'none'; }
+
+  // 3. Magnetic buttons - desktop hover only
+  if (!isMobile) {
+    document.querySelectorAll('.btn-pill, button').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width/2;
+        const y = e.clientY - rect.top - rect.height/2;
+        btn.style.transform = `translate(${x*0.15}px, ${y*0.15}px)`;
+      });
+      btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+    });
   }
 
-  // 3. Magnetic buttons (subtle pull toward cursor)
-  document.querySelectorAll('.btn-pill, button').forEach(btn => {
-    btn.addEventListener('mousemove', e => {
-      const rect = btn.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width/2;
-      const y = e.clientY - rect.top - rect.height/2;
-      btn.style.transform = `translate(${x*0.15}px, ${y*0.15}px)`;
-    });
-    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
-  });
-
-  // 4. GSAP scroll reveal
-  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+  // 4. GSAP scroll reveal - desktop ONLY
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !isMobile && !reduceMotion) {
     gsap.registerPlugin(ScrollTrigger);
     gsap.utils.toArray('section').forEach(s => {
       gsap.from(s, {
@@ -976,13 +994,21 @@
         scrollTrigger: { trigger: s, start: 'top 85%', toggleActions: 'play none none reverse' }
       });
     });
-
-    // Stagger reveal pour cards/elements
     gsap.utils.toArray('.card, .testimonial-card, .grid-3 > *, .grid-2 > *').forEach((el, i) => {
       gsap.from(el, {
         opacity: 0, y: 40, duration: 0.8, delay: i * 0.05, ease: 'power2.out',
         scrollTrigger: { trigger: el, start: 'top 90%' }
       });
+    });
+  }
+
+  // MOBILE FIX: force visibility on all elements
+  if (isMobile) {
+    document.querySelectorAll('section, .card, .testimonial-card, .grid-3 > *, .grid-2 > *, .container > div').forEach(el => {
+      el.style.opacity = '1';
+      el.style.transform = 'none';
+      el.style.filter = 'none';
+      el.style.visibility = 'visible';
     });
   }
 })();
