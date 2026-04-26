@@ -758,7 +758,7 @@
 <section class="hero" style="padding-top:40px;">
   <div class="container">
     <div class="pastille">POUR CEUX QUI SONT INTELLIGENTS, LASSÉS DU BOULOT ET QUI VEULENT ÊTRE LIBRES</div>
-    <h1><span class="kw-power">Imagine</span> que t'as <span class="kw-action">jamais vu</span> <span class="kw-mental">LE mécanisme</span> qui résout <span class="kw-power">tous tes problèmes</span> <span class="kw-action">d'un coup</span>.</h1>
+    <h1><span class="kw-power">Imagine</span> que t'as <span class="kw-action">jamais vu</span> <span class="kw-mental">LE mécanisme</span> qui <span class="kw-action">résout</span> <span class="kw-power">tous tes problèmes</span> <span class="kw-action">d'un coup</span>.</h1>
     <p class="hero-sub"><span class="kw-power">97 %</span> de chances que tu me remercies dans <span class="kw-mental">5 minutes</span>. <span class="kw-action">83 mecs</span> avant toi l'ont vu — <span class="kw-action">tu seras le 84<sup>e</sup></span>.</p>
   </div>
 </section>
@@ -807,10 +807,8 @@
   </div>
 </section>
 
-<!-- S4 RÉSUMÉ -->
-<section class="btn-section">
-  <a href="#temoignages" class="btn-pill btn-gradient" style="font-size:16px;padding:14px 36px;">VOIR LES 69 TÉMOIGNAGES ↓↓</a>
-</section>
+<!-- S4 RÉSUMÉ - v2 (2026-04-26): retire CTA "VOIR LES 69 TEMOIGNAGES" (user feedback) -->
+
 
 <!-- S6 AUDIT GRATUIT -->
 <section class="gift">
@@ -1015,11 +1013,16 @@
     header.style.background = y > 50 ? 'rgba(10,4,16,0.95)' : 'rgba(10,4,16,0.85)';
   });
 
-  // Wistia overlay : on click, hide overlay (Wistia foam handles audio)
+  // v2 (2026-04-26): YouTube unmute on click + hide overlay
   const heroWrapper = document.querySelector('.video-wrapper');
   if (heroWrapper) {
     heroWrapper.addEventListener('click', function(e) {
       const overlay = heroWrapper.querySelector('.video-overlay');
+      const iframe = heroWrapper.querySelector('#heroVideo');
+      if (iframe && iframe.src.includes('mute=1')) {
+        // Unmute via reload iframe avec mute=0 + controls=1 pour user controls
+        iframe.src = iframe.src.replace('mute=1', 'mute=0').replace('autoplay=1', 'autoplay=1&controls=1');
+      }
       if (overlay) overlay.style.display = 'none';
     });
   }
