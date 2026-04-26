@@ -901,11 +901,54 @@
 <section class="video-section" style="padding-top:30px;">
   <div class="container">
     <div class="video-wrapper">
-      <iframe id="heroVideo" src="https://www.youtube.com/embed/JUJmNosxj14?autoplay=1&mute=1&loop=1&playlist=JUJmNosxj14&rel=0" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;aspect-ratio:16/9;border:none;display:block;"></iframe>
-      <div class="video-overlay">
+      <iframe id="heroVideo" src="https://www.youtube.com/embed/JUJmNosxj14?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=JUJmNosxj14&rel=0&playsinline=1&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;aspect-ratio:16/9;border:none;display:block;"></iframe>
+      <div class="video-overlay" id="heroSoundOverlay">
         <div class="sound-icon">🔊</div>
         <span>Touche pour activer le son — La vidéo joue déjà</span>
       </div>
+      <script>
+        // YouTube IFrame API: restart at 0 on every page load + unmute + play on first user interaction
+        (function(){
+          var tag = document.createElement('script');
+          tag.src = 'https://www.youtube.com/iframe_api';
+          var first = document.getElementsByTagName('script')[0];
+          first.parentNode.insertBefore(tag, first);
+          var heroPlayer = null;
+          window.onYouTubeIframeAPIReady = function() {
+            heroPlayer = new YT.Player('heroVideo', {
+              events: {
+                'onReady': function(e) {
+                  try {
+                    e.target.seekTo(0, true);     // restart from 0 on load
+                    e.target.playVideo();
+                    // Try unmute attempt (will likely fail on first visit, that's ok)
+                    setTimeout(function(){ try { e.target.unMute(); } catch(_){} }, 400);
+                  } catch(_){}
+                }
+              }
+            });
+          };
+          var overlay = document.getElementById('heroSoundOverlay');
+          var unmuteHero = function() {
+            try {
+              if (heroPlayer && heroPlayer.unMute) {
+                heroPlayer.unMute();
+                heroPlayer.setVolume(100);
+                heroPlayer.seekTo(0, true);
+                heroPlayer.playVideo();
+              }
+            } catch(_){}
+            if (overlay) overlay.style.display = 'none';
+            ['click','touchstart','keydown','scroll'].forEach(function(ev){
+              document.removeEventListener(ev, unmuteHero, true);
+            });
+          };
+          ['click','touchstart','keydown','scroll'].forEach(function(ev){
+            document.addEventListener(ev, unmuteHero, true);
+          });
+          if (overlay) overlay.addEventListener('click', unmuteHero);
+        })();
+      </script>
     </div>
     <div style="text-align:center;margin-top:20px;">
       <a href="#temoignages" class="btn-pill" style="background:linear-gradient(135deg,#ff2e93,#00d4ff);color:#fff;font-weight:800;">📹 VOIR LES 83+ TÉMOIGNAGES →</a>
