@@ -649,7 +649,7 @@
 <section class="hero" style="padding-top:40px;">
   <div class="container">
     <div class="pastille">POUR CEUX QUI SONT INTELLIGENTS, LASSÉS DU BOULOT ET QUI VEULENT ÊTRE LIBRES</div>
-    <h1>Imagine que t'as <span class="kw-action">jamais vu</span> <span class="kw-mental">LE mécanisme</span> qui résout <span class="kw-power">tous tes problèmes</span> d'un coup.</h1>
+    <h1><span class="kw-power">Imagine</span> que t'as <span class="kw-action">jamais vu</span> <span class="kw-mental">LE mécanisme</span> qui résout <span class="kw-power">tous tes problèmes</span> <span class="kw-action">d'un coup</span>.</h1>
     <p class="hero-sub"><span class="kw-power">97 %</span> de chances que tu me remercies dans <span class="kw-mental">5 minutes</span>. <span class="kw-action">83 mecs</span> avant toi l'ont vu — <span class="kw-action">tu seras le 84<sup>e</sup></span>.</p>
   </div>
 </section>
@@ -952,12 +952,25 @@
 <script src="https://unpkg.com/lenis@1.0.42/dist/lenis.min.js"></script>
 <script>
 (function(){
-  // Mobile detection
+  // FORCE SCROLL TO TOP au load (ignorer hash anchor qui faisait sauter sur iClosed)
+  if (window.location.hash) { history.replaceState(null, '', window.location.pathname + window.location.search); }
+  window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0;
+  setTimeout(() => window.scrollTo(0, 0), 50);
+  setTimeout(() => window.scrollTo(0, 0), 200);
+
+  // Mobile + slow device detection (entre-deux performance)
   const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window) || window.matchMedia('(pointer:coarse)').matches;
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isSlowDevice = (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) || (navigator.deviceMemory && navigator.deviceMemory < 4);
+  const lightMode = isMobile || reduceMotion || isSlowDevice;
 
-  // 1. Smooth scroll Lenis - desktop ONLY (mobile = scroll natif touch)
-  if (typeof Lenis !== 'undefined' && !isMobile && !reduceMotion) {
+  // FORCE visibility immediate sur tout (avant GSAP) pour eviter blocage chargement
+  document.querySelectorAll('section, .card, .testimonial-card, .grid-3 > *, .grid-2 > *, .container > div').forEach(el => {
+    el.style.opacity = '1'; el.style.visibility = 'visible';
+  });
+
+  // 1. Smooth scroll Lenis - desktop FAST seulement
+  if (typeof Lenis !== 'undefined' && !lightMode) {
     const lenis = new Lenis({ lerp: 0.08, smoothWheel: true });
     function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
     requestAnimationFrame(raf);
@@ -965,7 +978,7 @@
 
   // 2. Custom cursor glow - desktop hover only
   const cg = document.getElementById('cursorGlow');
-  if (cg && window.matchMedia('(hover:hover)').matches && !isMobile) {
+  if (cg && window.matchMedia("(hover:hover)").matches && !lightMode) {
     document.addEventListener('mousemove', e => {
       cg.style.left = e.clientX + 'px';
       cg.style.top = e.clientY + 'px';
@@ -973,7 +986,7 @@
   } else if (cg) { cg.style.display = 'none'; }
 
   // 3. Magnetic buttons - desktop hover only
-  if (!isMobile) {
+  if (!lightMode) {
     document.querySelectorAll('.btn-pill, button').forEach(btn => {
       btn.addEventListener('mousemove', e => {
         const rect = btn.getBoundingClientRect();
@@ -986,7 +999,7 @@
   }
 
   // 4. GSAP scroll reveal - desktop ONLY
-  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !isMobile && !reduceMotion) {
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !lightMode) {
     gsap.registerPlugin(ScrollTrigger);
     gsap.utils.toArray('section').forEach(s => {
       gsap.from(s, {
@@ -1003,7 +1016,7 @@
   }
 
   // MOBILE FIX: force visibility on all elements
-  if (isMobile) {
+  if (lightMode) {
     document.querySelectorAll('section, .card, .testimonial-card, .grid-3 > *, .grid-2 > *, .container > div').forEach(el => {
       el.style.opacity = '1';
       el.style.transform = 'none';
