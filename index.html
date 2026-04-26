@@ -764,10 +764,17 @@
   [class*="glass"], [class*="panel"], [class*="card"]:not(.brand-pill):not(.iridescent-pill) {
     border-color: rgba(10,4,16,0.10) !important;
   }
-  /* Cards body bg subtle (etait rgba(255,255,255,0.05)) => subtle gray */
-  .glass, .panel, .testimonial-card, .feature-card, .stat-card,
-  [class*="testimonial"], [class*="feature"]:not(.feature-pill) {
-    background: rgba(10,4,16,0.025) !important;
+  /* Cards body bg subtle (etait rgba(255,255,255,0.05)) => subtle gray
+     IMPORTANT: utiliser background-COLOR (pas background) pour preserver
+     les background-image inline (testimonials Wistia thumbs, etc.) */
+  .glass, .panel, .feature-card, .stat-card,
+  [class*="feature"]:not(.feature-pill) {
+    background-color: rgba(10,4,16,0.025) !important;
+  }
+  /* Testimonial cards : gardent leur background-image inline (Wistia thumbs).
+     On ajoute juste une bordure pour visibilite sur fond blanc */
+  .testimonial-card, [class*="testimonial-card"] {
+    border: 1px solid rgba(10,4,16,0.10) !important;
   }
 
   /* CTA buttons :
@@ -797,6 +804,53 @@
 
   /* Selection blanche -> noire */
   ::selection { background: rgba(255,46,147,0.3); color: var(--text); }
+
+  /* ============================================================
+     READABILITY FIX (Brief 26-04 19:42)
+     - Disable shimmer animation on h1 (gene la lecture)
+     - Class kw-mute pour mots non-impactants (couleur texte = noir)
+     - Garde couleur SEULEMENT sur mots cles (imagine, mecanisme, resout, problemes)
+     ============================================================ */
+  .hero h1, .hero h1::after, .hero h1::before { animation: none !important; }
+  .hero h1 {
+    -webkit-text-fill-color: var(--text) !important;
+    color: var(--text) !important;
+    background: none !important;
+    background-clip: initial !important;
+    -webkit-background-clip: initial !important;
+  }
+  /* On reactive le clip-text uniquement sur les spans qui doivent rester colores */
+  .hero h1 .kw-mental {
+    background: linear-gradient(135deg, var(--pink) 0%, var(--cyan) 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+    font-weight: 700 !important;
+  }
+  .hero h1 .kw-power, h1 .kw-power {
+    color: var(--pink) !important;
+    -webkit-text-fill-color: var(--pink) !important;
+    font-weight: 700 !important;
+    background: none !important;
+  }
+  .hero h1 .kw-action, h1 .kw-action {
+    color: var(--orange) !important;
+    -webkit-text-fill-color: var(--orange) !important;
+    font-weight: 700 !important;
+    background: none !important;
+  }
+  /* Mot mute = couleur normale texte noir */
+  .kw-mute {
+    color: var(--text) !important;
+    -webkit-text-fill-color: var(--text) !important;
+    background: none !important;
+    -webkit-background-clip: initial !important;
+    background-clip: initial !important;
+    font-weight: inherit !important;
+    text-shadow: none !important;
+    font-style: normal !important;
+  }
 </style>
 <script>
   // Flip header bg dynamique (etait rgba(10,4,16,0.85) -> rgba(255,255,255,0.92)) - injecte apres DOM ready
@@ -830,7 +884,7 @@
 <section class="hero" style="padding-top:40px;">
   <div class="container">
     <div class="pastille">POUR CEUX QUI SONT INTELLIGENTS, LASSÉS DU BOULOT ET QUI VEULENT ÊTRE LIBRES</div>
-    <h1><span class="kw-power">Imagine</span> que t'as <span class="kw-action">jamais vu</span> <span class="kw-mental">LE mécanisme</span> qui <span class="kw-action">résout</span> <span class="kw-power">tous tes problèmes</span> <span class="kw-action">d'un coup</span>.</h1>
+    <h1><span class="kw-power">Imagine</span> que t'as <span class="kw-mute">jamais vu</span> <span class="kw-mental">LE mécanisme</span> qui <span class="kw-action">résout</span> <span class="kw-power">tous tes problèmes</span> <span class="kw-mute">d'un coup</span>.</h1>
     <p class="hero-sub"><span class="kw-power">97 %</span> de chances que tu me remercies dans <span class="kw-mental">5 minutes</span>. <span class="kw-action">83 mecs</span> avant toi l'ont vu — <span class="kw-action">tu seras le 84<sup>e</sup></span>.</p>
   </div>
 </section>
