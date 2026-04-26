@@ -736,7 +736,79 @@
   ::-webkit-scrollbar { width:6px; }
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:linear-gradient(180deg, rgba(255,46,147,0.4), rgba(0,212,255,0.4)); border-radius:3px; }
+
+  /* ============================================================
+     LIGHT THEME OVERRIDE (Brief Djibril 26-04 19:24)
+     - Fond blanc, ecriture blanche -> noire
+     - GARDE intactes les couleurs (--pink, --cyan, --orange, gradients)
+     ============================================================ */
+  :root {
+    --bg: #ffffff;
+    --bg-2: #f6f4f9;
+    --text: #0a0410;
+    --muted: #5a4d70;
+  }
+  body { background: var(--bg); color: var(--text); }
+
+  /* Header sticky : flip dark -> white frosted */
+  header, header#header { background: rgba(255,255,255,0.92) !important; border-bottom: 1px solid rgba(10,4,16,0.08) !important; }
+  /* Wordmark : nom Djibril doit etre noir maintenant */
+  .wordmark .djibril { color: var(--text) !important; }
+
+  /* Cards / sections : remplacer subtle white tint par subtle dark tint pour visibilite sur blanc */
+  [class*="card"], section { background-color: var(--bg); }
+
+  /* Borders qui etaient rgba(255,255,255,0.05-0.25) sur fond noir => maintenant invisibles sur blanc.
+     On override les borders subtiles en sombre pour contraste. */
+  .glass, .panel, .pill, .testimonial-card, .feature-card, .stat-card,
+  [class*="glass"], [class*="panel"], [class*="card"]:not(.brand-pill):not(.iridescent-pill) {
+    border-color: rgba(10,4,16,0.10) !important;
+  }
+  /* Cards body bg subtle (etait rgba(255,255,255,0.05)) => subtle gray */
+  .glass, .panel, .testimonial-card, .feature-card, .stat-card,
+  [class*="testimonial"], [class*="feature"]:not(.feature-pill) {
+    background: rgba(10,4,16,0.025) !important;
+  }
+
+  /* CTA buttons :
+     - Outline buttons gardent --pink/--cyan
+     - Solid CTA garde son gradient mais texte devient blanc (contraste sur gradient color) */
+  .cta, .btn-cta, [class*="cta-solid"] { color: #ffffff !important; }
+
+  /* Footer fond noir => fond blanc avec fine top border */
+  footer { background: var(--bg) !important; border-top: 1px solid rgba(10,4,16,0.10) !important; color: var(--text); }
+
+  /* Grain noise overlay (s'il existe en blanc/X) : on le garde mais reduit opacite */
+  .grain, [class*="grain"], [class*="noise"] { opacity: 0.04; mix-blend-mode: multiply; }
+
+  /* Photo overlays / film captions etaient rgba(10,4,16,X) => on flip en blanc */
+  .photo-caption, [class*="overlay-bottom"] {
+    background: linear-gradient(transparent, rgba(255,255,255,0.92)) !important;
+    color: var(--text);
+  }
+
+  /* Tableau / matrice / sections sombres force light */
+  .matrix, .comparison, table { background: var(--bg-2) !important; color: var(--text); }
+  th, td { border-color: rgba(10,4,16,0.10) !important; }
+
+  /* Modal / popup background-overlay */
+  .modal, .popup, [class*="modal-bg"] { background: rgba(10,4,16,0.45) !important; }
+  .modal-content, .popup-content { background: var(--bg); color: var(--text); }
+
+  /* Selection blanche -> noire */
+  ::selection { background: rgba(255,46,147,0.3); color: var(--text); }
 </style>
+<script>
+  // Flip header bg dynamique (etait rgba(10,4,16,0.85) -> rgba(255,255,255,0.92)) - injecte apres DOM ready
+  document.addEventListener('DOMContentLoaded', function(){
+    const hdr = document.getElementById('header');
+    if (!hdr) return;
+    window.addEventListener('scroll', function(){
+      const y = window.scrollY || 0;
+      hdr.style.background = y > 50 ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.92)';
+    }, { passive: true });
+  });
+</script>
 </head>
 <body>
 
