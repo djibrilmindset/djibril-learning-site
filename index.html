@@ -1293,7 +1293,7 @@ header, section, footer, main, .container, .header-inner { position: relative; z
 
 
 <style id="cosmos-patch-v4">
-.testimonial-card,[class*="card"]:not(.brand-pill):not(.iridescent-pill),.glass,.panel,.feature-card,.stat-card,[class*="feature"]:not(.feature-pill),.video-wrapper,.compilation-video-wrapper,.portrait-video{background-color:transparent!important;background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+[class*="card"]:not(.brand-pill):not(.iridescent-pill):not(.testimonial-card),.glass,.panel,.feature-card,.stat-card,[class*="feature"]:not(.feature-pill),.video-wrapper,.compilation-video-wrapper,.portrait-video{background-color:transparent!important;background:transparent!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 .video-wrapper{border:1.5px solid rgba(26,22,20,0.25)!important;box-shadow:6px 6px 0 rgba(199,62,26,0.4)!important}
 .hero{padding-top:20px!important;padding-bottom:4px!important}
 .hero h1{font-size:clamp(1.3rem,2.6vw,2rem)!important;line-height:1.18!important;margin-bottom:12px!important;max-width:760px;margin-left:auto!important;margin-right:auto!important;font-family:'Instrument Serif','Playfair Display',Georgia,serif!important;font-style:italic!important;font-weight:400!important;color:#1a1614!important;-webkit-text-fill-color:#1a1614!important;background:none!important;-webkit-background-clip:initial!important;background-clip:initial!important;animation:none!important}
@@ -1528,47 +1528,32 @@ a[href*="djibril-ads-landing"]{background:#f3ecdf!important}
   </div>
 </section>
 
-<!-- S2 VIDEO HERO (vidéo SOUS le titre) -->
+<!-- S2 VIDEO HERO (vidéo SOUS le titre) - Wistia ID rfemp7gpcs -->
 <section class="video-section" style="padding-top:30px;">
   <div class="container">
     <div class="video-wrapper">
-      <iframe id="heroVideo" src="https://www.youtube.com/embed/JUJmNosxj14?enablejsapi=1&autoplay=1&mute=1&loop=1&playlist=JUJmNosxj14&rel=0&playsinline=1&modestbranding=1" allow="autoplay; encrypted-media" allowfullscreen style="width:100%;aspect-ratio:16/9;border:none;display:block;"></iframe>
+      <script src="https://fast.wistia.com/embed/medias/rfemp7gpcs.jsonp" async></script>
+      <script src="https://fast.wistia.com/assets/external/E-v1.js" async></script>
+      <div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;">
+        <div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;">
+          <div class="wistia_embed wistia_async_rfemp7gpcs seo=true videoFoam=true autoPlay=true volume=1 endVideoBehavior=reset playerColor=ff2e93" style="height:100%;position:relative;width:100%"></div>
+        </div>
+      </div>
       <div class="video-overlay" id="heroSoundOverlay">
         <div class="sound-icon">🔊</div>
         <span>Touche pour activer le son — La vidéo joue déjà</span>
       </div>
       <script>
-        // YouTube IFrame API: restart at 0 on every page load + unmute + play on first user interaction
-        (function(){
-          var tag = document.createElement('script');
-          tag.src = 'https://www.youtube.com/iframe_api';
-          var first = document.getElementsByTagName('script')[0];
-          first.parentNode.insertBefore(tag, first);
-          var heroPlayer = null;
-          window.onYouTubeIframeAPIReady = function() {
-            heroPlayer = new YT.Player('heroVideo', {
-              events: {
-                'onReady': function(e) {
-                  try {
-                    e.target.seekTo(0, true);     // restart from 0 on load
-                    e.target.playVideo();
-                    // Try unmute attempt (will likely fail on first visit, that's ok)
-                    setTimeout(function(){ try { e.target.unMute(); } catch(_){} }, 400);
-                  } catch(_){}
-                }
-              }
-            });
-          };
+        window._wq = window._wq || [];
+        window._wq.push({ id: "rfemp7gpcs", onReady: function(video) {
+          try {
+            video.time(0);
+            video.volume(1.0);
+            video.play();
+          } catch(_){}
           var overlay = document.getElementById('heroSoundOverlay');
           var unmuteHero = function() {
-            try {
-              if (heroPlayer && heroPlayer.unMute) {
-                heroPlayer.unMute();
-                heroPlayer.setVolume(100);
-                heroPlayer.seekTo(0, true);
-                heroPlayer.playVideo();
-              }
-            } catch(_){}
+            try { video.unmute(); video.volume(1.0); video.play(); } catch(_){}
             if (overlay) overlay.style.display = 'none';
             ['click','touchstart','keydown','scroll'].forEach(function(ev){
               document.removeEventListener(ev, unmuteHero, true);
@@ -1577,11 +1562,11 @@ a[href*="djibril-ads-landing"]{background:#f3ecdf!important}
           ['click','touchstart','keydown','scroll'].forEach(function(ev){
             document.addEventListener(ev, unmuteHero, true);
           });
-          if (overlay) overlay.addEventListener('click', unmuteHero);
-        })();
+        }});
       </script>
     </div>
-    <div style="text-align:center;margin-top:20px;">
+  </div>
+</section>
       <a href="#temoignages" class="btn-pill" style="background:linear-gradient(135deg,#ff2e93,#00d4ff);color:#fff;font-weight:800;">📹 VOIR LES 83+ TÉMOIGNAGES →</a>
     </div>
   </div>
